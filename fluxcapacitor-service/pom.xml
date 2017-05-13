@@ -28,57 +28,67 @@
   <artifactId>fluxcapacitor-service</artifactId>
   <packaging>war</packaging>
 
-  <build>
-    <plugins>
-
-      <plugin>
-        <groupId>org.apache.maven.plugins</groupId>
-        <artifactId>maven-jar-plugin</artifactId>
-        <configuration>
-          <archive>
-            <manifestEntries>
-              <Premain-Class>com.tomitribe.fluxcapacitor.Agent</Premain-Class>
-              <Agent-Class>com.tomitribe.fluxcapacitor.Agent</Agent-Class>
-              <Can-Redefine-Classes>true</Can-Redefine-Classes>
-              <Can-Retransform-Classes>true</Can-Retransform-Classes>
-            </manifestEntries>
-          </archive>
-        </configuration>
-      </plugin>
-
-      <plugin>
-        <groupId>org.apache.maven.plugins</groupId>
-        <artifactId>maven-shade-plugin</artifactId>
-        <executions>
-          <execution>
-            <phase>package</phase>
-            <goals>
-              <goal>shade</goal>
-            </goals>
-            <configuration>
-              <relocations>
-                <relocation>
-                  <pattern>org.objectweb.asm</pattern>
-                  <shadedPattern>com.tomitribe.fluxcapacitor.asm</shadedPattern>
-                </relocation>
-              </relocations>
-            </configuration>
-          </execution>
-        </executions>
-      </plugin>
-    </plugins>
-  </build>
-
   <dependencies>
     <dependency>
-      <groupId>org.ow2.asm</groupId>
-      <artifactId>asm-all</artifactId>
+      <groupId>com.tomitribe</groupId>
+      <artifactId>fluxcapacitor-agent</artifactId>
+      <version>0.1-SNAPSHOT</version>
+      <scope>provided</scope>
+    </dependency>
+    <dependency>
+      <groupId>org.tomitribe</groupId>
+      <artifactId>tomitribe-util</artifactId>
+      <version>1.2.2</version>
+    </dependency>
+    <dependency>
+      <groupId>org.apache.openejb</groupId>
+      <artifactId>javaee-api</artifactId>
+      <version>${openejb.javaee.api}</version>
+      <scope>provided</scope>
+    </dependency>
+    <dependency>
+      <groupId>org.apache.openejb</groupId>
+      <artifactId>arquillian-tomee-embedded</artifactId>
+      <version>${tomee.version}</version>
+      <scope>test</scope>
+    </dependency>
+    <dependency>
+      <groupId>org.apache.openejb</groupId>
+      <artifactId>tomee-jaxrs</artifactId>
+      <version>${tomee.version}</version>
+      <scope>test</scope>
     </dependency>
     <dependency>
       <groupId>junit</groupId>
       <artifactId>junit</artifactId>
-      <version>4.11</version>
+      <version>4.12</version>
+      <scope>test</scope>
     </dependency>
   </dependencies>
 
+  <build>
+    <plugins>
+      <plugin>
+        <groupId>org.apache.openejb.maven</groupId>
+        <artifactId>tomee-maven-plugin</artifactId>
+        <version>${tomee.version}</version>
+        <configuration>
+          <tomeeVersion>${tomee.version}</tomeeVersion>
+          <tomeeClassifier>jaxrs</tomeeClassifier>
+          <javaagents>
+            <javaagent>com.tomitribe:fluxcapacitor-agent:0.1-SNAPSHOT:jar</javaagent>
+          </javaagents>
+        </configuration>
+      </plugin>
+    </plugins>
+  </build>
+
+  <properties>
+    <tomee.version>1.7.4</tomee.version>
+    <openejb.javaee.api>6.0-6</openejb.javaee.api>
+    <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
+    <failOnMissingWebXml>false</failOnMissingWebXml>
+    <maven.compiler.target>1.7</maven.compiler.target>
+    <maven.compiler.source>1.7</maven.compiler.source>
+  </properties>
 </project>

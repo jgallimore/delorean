@@ -41,7 +41,8 @@ public class Enhancer extends ClassVisitor implements Opcodes {
 
     public static byte[] enhance(byte[] bytes, final String className) {
         if (className.startsWith("sun/")) return bytes;
-        if (className.startsWith("com/tomitribe/delorean/")) return bytes;
+        if (className.startsWith("java/")) return bytes;
+        if (className.startsWith("com/tomitribe/fluxcapacitor/")) return bytes;
 
         try {
             final ClassWriter cw = new ClassWriter(ClassWriter.COMPUTE_MAXS);

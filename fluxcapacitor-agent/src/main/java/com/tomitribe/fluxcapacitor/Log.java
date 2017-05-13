@@ -48,4 +48,12 @@ public class Log {
 //        System.err.println(format + " " + Join.join(" ", details));
         System.err.printf("%tF %<tT - FluxCapacitor: %s%n", System.currentTimeMillis(), message);
     }
+
+    public static void main(String[] args) {
+        String format = asDate(System.currentTimeMillis());
+    }
+
+    private static String asDate(final long timeMillis) {
+        return String.format("%tF %<tT%n", timeMillis);
+    }
 }

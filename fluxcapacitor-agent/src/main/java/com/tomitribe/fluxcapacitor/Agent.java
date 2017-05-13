@@ -61,6 +61,8 @@ public class Agent {
             instrumentation.addTransformer(new Transformer());
             Log.log("Agent installed successfully.");
 
+            boolean modifiableClass = instrumentation.isModifiableClass(System.class);
+            System.out.println(modifiableClass);
         } catch (final Throwable e) {
             Log.err("Agent installation failed %s", e.getMessage());
             e.printStackTrace();
