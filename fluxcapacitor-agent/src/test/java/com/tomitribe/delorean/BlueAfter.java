@@ -14,27 +14,29 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package io.superbiz.colors;
+
+package com.tomitribe.delorean;
 
 import com.tomitribe.delorean.api.Delorean;
 
-/**
- * @version $Revision$ $Date$
- */
-public class Red extends Color {
-
-    public void red() {
+public class BlueAfter {
+    public void foo() throws IllegalStateException {
         System.out.print("");
 
-        System.out.printf("Current date is %tF %<tT %s%n", Delorean.currentTimeMillis(), "Red");
-        int i = Integer.parseInt("1");
-        long l = Delorean.currentTimeMillis();
-        if (Boolean.parseBoolean("" + l)) {
+        Delorean.currentTimeMillis();
+
+        int i = Integer.parseInt("");
+
+        long l1 = System.nanoTime();
+        long l2 = Delorean.currentTimeMillis();
+
+        if (Boolean.parseBoolean("" + l2)) {
             System.out.print("");
         }
     }
 
-    public void not() {
-
+    public long bar() throws IllegalStateException {
+        return Delorean.currentTimeMillis();
     }
+
 }
