@@ -53,8 +53,8 @@ public class AgentTest extends Assert {
     public void test() throws Exception {
 
         final Java.Result result = Java.java(
-                "-Ddelorean.debug=true",
-                "-Ddelorean.offset=30 days ago",
+                "-Dfluxcapacitor.debug=true",
+                "-Dfluxcapacitor.offset=30 days ago",
                 "-javaagent:" + agentJar.getAbsolutePath(),
                 "-classpath",
                 testJar.getAbsolutePath(),

@@ -49,6 +49,7 @@ public class Bytecode {
     }
 
     public static void read(final byte[] originalBytes, final ClassVisitor classAdapter) {
+        if (originalBytes == null) throw new IllegalStateException("bytecode array is null");
         final ClassReader cr = new ClassReader(originalBytes);
         cr.accept(classAdapter, ClassReader.EXPAND_FRAMES);
     }
