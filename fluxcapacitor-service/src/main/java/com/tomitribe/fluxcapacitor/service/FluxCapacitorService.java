@@ -28,6 +28,7 @@ import javax.ws.rs.PathParam;
 import javax.ws.rs.Produces;
 import java.util.Date;
 
+import static com.tomitribe.fluxcapacitor.api.FluxCapacitor.parse;
 import static javax.ejb.LockType.READ;
 import static javax.ws.rs.core.MediaType.APPLICATION_JSON;
 
@@ -46,8 +47,7 @@ public class FluxCapacitorService {
     @POST
     @Produces({APPLICATION_JSON})
     public Status offset(String offset) {
-        FluxCapacitor.setOffset(offset);
-        return new Status(FluxCapacitor.getOffset(), new Date().getTime());
+        return offset(parse(offset));
     }
 
     @Path("offset/{offset}")
@@ -59,21 +59,52 @@ public class FluxCapacitorService {
         return new Status(FluxCapacitor.getOffset(), new Date().getTime());
     }
 
+    @Path("offset/increment")
+    @POST
+    @Produces({APPLICATION_JSON})
+    public Status offsetIncrement(String duration) {
+        return offsetIncrement(parse(duration));
+    }
+
+    @Path("offset/increment/{delta}")
+    @POST
+    @Produces({APPLICATION_JSON})
+    @Consumes({APPLICATION_JSON})
+    public Status offsetIncrement(@PathParam("delta") long delta) {
+        FluxCapacitor.addOffset(delta);
+        return new Status(FluxCapacitor.getOffset(), new Date().getTime());
+    }
+
+    @Path("offset/decrement")
+    @POST
+    @Produces({APPLICATION_JSON})
+    public Status offsetDecrement(String duration) {
+        return offsetDecrement(parse(duration));
+    }
+
+    @Path("offset/decrement/{delta}")
+    @POST
+    @Produces({APPLICATION_JSON})
+    @Consumes({APPLICATION_JSON})
+    public Status offsetDecrement(@PathParam("delta") long delta) {
+        FluxCapacitor.addOffset(-1 * delta);
+        return new Status(FluxCapacitor.getOffset(), new Date().getTime());
+    }
+
     @Path("date")
     @POST
     @Produces({APPLICATION_JSON})
     public Status date(String date) {
-
-
-        FluxCapacitor.setOffset(date);
-        return new Status(FluxCapacitor.getOffset(), new Date().getTime());
+        final long time = Dates.parse(date).getTime();
+        return date(time);
     }
 
     @Path("date/{date}")
     @POST
     @Produces({APPLICATION_JSON})
     @Consumes({APPLICATION_JSON})
-    public Status date(@PathParam("date") long offset) {
+    public Status date(@PathParam("date") long time) {
+        final long offset = time - FluxCapacitor.actualTimeMillis();
         FluxCapacitor.setOffset(offset);
         return new Status(FluxCapacitor.getOffset(), new Date().getTime());
     }

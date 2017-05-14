@@ -39,4 +39,13 @@ public class DatesTest extends Assert {
             assertEquals(8, e.getSupported().length);
         }
     }
+
+    @Test
+    public void offset() {
+        final long time = Dates.parse("1976-03-30 UTC").getTime();
+        final long offset = time - System.currentTimeMillis();
+
+        assertTrue(offset < 0);
+   }
+
 }

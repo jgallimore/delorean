@@ -36,17 +36,21 @@ public class FluxCapacitor {
         return offset.get();
     }
 
+    public static long addOffset(final long delta) {
+        return offset.addAndGet(delta);
+    }
+
     public static void setOffset(long milliseconds) {
         offset.set(milliseconds);
     }
 
     public static void setOffset(String duration) {
-        long time = parseOffsetToMillis(duration);
+        long time = parse(duration);
         log("Setting offset to '%s'", duration);
         offset.set(time);
     }
 
-    public static long parseOffsetToMillis(String duration) {
+    public static long parse(String duration) {
         duration = duration.trim();
 
         if (duration.endsWith(" ago")) {
