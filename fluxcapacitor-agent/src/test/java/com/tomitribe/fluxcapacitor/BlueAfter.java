@@ -17,6 +17,8 @@
 
 package com.tomitribe.fluxcapacitor;
 
+import com.tomitribe.fluxcapacitor.api.FluxCapacitor;
+
 public class BlueAfter {
     public void foo() throws IllegalStateException {
         System.out.print("");

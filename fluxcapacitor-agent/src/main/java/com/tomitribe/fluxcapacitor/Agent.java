@@ -28,6 +28,10 @@ public class Agent {
 
     private static Instrumentation instrumentation;
 
+    static {
+        InstallFluxCapacitor.install();
+    }
+
     private Agent() {
         // no-op
     }
@@ -55,8 +59,7 @@ public class Agent {
     private static void initialize(final String agentArgs, final Instrumentation instrumentation) {
         try {
 
-            Log.debug.set(Boolean.getBoolean("delorean.debug"));
-            FluxCapacitor.setOffset(System.getProperty("delorean.offset", "0 milliseconds"));
+            Log.debug.set(Boolean.getBoolean("fluxcapacitor.debug"));
 
             instrumentation.addTransformer(new Transformer());
             Log.log("Agent installed successfully.");

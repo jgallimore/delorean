@@ -16,6 +16,9 @@
  */
 package com.tomitribe.fluxcapacitor;
 
+import com.tomitribe.fluxcapacitor.api.Duration;
+import com.tomitribe.fluxcapacitor.api.FluxCapacitor;
+import com.tomitribe.fluxcapacitor.api.Normalize;
 import com.tomitribe.fluxcapacitor.util.Bytecode;
 import com.tomitribe.fluxcapacitor.util.Hex;
 import com.tomitribe.fluxcapacitor.util.IO;
@@ -52,9 +55,9 @@ public class Asmifier {
     }
 
     public static void main(final String[] args) throws IOException {
-        Asmifier.print(Asmifier.class.getClassLoader(), "io.superbiz.colors.Blue");
-        Asmifier.print(Asmifier.class.getClassLoader(), "io.superbiz.colors.Green");
-        Asmifier.print(Asmifier.class.getClassLoader(), "io.superbiz.colors.Red");
+        Asmifier.print(Asmifier.class.getClassLoader(), FluxCapacitor.class.getName());
+        Asmifier.print(Asmifier.class.getClassLoader(), Duration.class.getName());
+        Asmifier.print(Asmifier.class.getClassLoader(), Normalize.class.getName());
     }
 
 //    public static void main(final String[] args) throws IOException {

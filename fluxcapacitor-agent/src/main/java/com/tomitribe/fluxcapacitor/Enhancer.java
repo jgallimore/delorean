@@ -40,24 +40,23 @@ public class Enhancer extends ClassVisitor implements Opcodes {
     }
 
     public static byte[] enhance(byte[] bytes, final String className) {
-        if (className.startsWith("sun/")) return bytes;
-        if (className.startsWith("java/")) return bytes;
-        if (className.startsWith("com/tomitribe/fluxcapacitor/")) return bytes;
-
         try {
+
             final ClassWriter cw = new ClassWriter(ClassWriter.COMPUTE_MAXS);
             final Enhancer enhancer = new Enhancer(cw);
             Bytecode.read(bytes, enhancer);
 
-            if (enhancer.getReplaced() > 0 ) {
+            if (enhancer.getReplaced() > 0) {
                 Log.debug("Replaced %s System.currentTimeMillis usages in %s", enhancer.getReplaced(), className);
             }
 
             return cw.toByteArray();
+
         } catch (Exception e) {
 
             Log.err("Enhance Failed for '%s' : %s %s", className, e.getClass().getName(), e.getMessage());
             e.printStackTrace();
+
             return bytes;
         }
     }
@@ -68,9 +67,19 @@ public class Enhancer extends ClassVisitor implements Opcodes {
         return new MethodVisitor(Opcodes.ASM5, visitor) {
             @Override
             public void visitMethodInsn(int i, String s, String s1, String s2, boolean b) {
+
+                // Replace System.currentTimeMillis() with FluxCapacitor.currentTimeMillis()
                 if ("java/lang/System".equals(s) && "currentTimeMillis".equals(s1) && "()J".equals(s2)) {
+
                     replaced++;
-                    super.visitMethodInsn(i, "com/tomitribe/fluxcapacitor/FluxCapacitor", s1, s2, b);
+                    super.visitMethodInsn(i, "com/tomitribe/fluxcapacitor/gen/FluxCapacitor", s1, s2, b);
+
+                    // Replace the FluxCapacitor from the agent classpath with one in the bootstrap classpath
+                } else if ("com/tomitribe/fluxcapacitor/api/FluxCapacitor".equals(s)) {
+
+                    super.visitMethodInsn(i, "com/tomitribe/fluxcapacitor/gen/FluxCapacitor", s1, s2, b);
+
+                    // Let the method through unmodified
                 } else {
                     super.visitMethodInsn(i, s, s1, s2, b);
                 }

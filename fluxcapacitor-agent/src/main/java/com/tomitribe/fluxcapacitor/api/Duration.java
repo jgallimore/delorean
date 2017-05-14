@@ -1,22 +1,13 @@
-/**
- * Licensed to the Apache Software Foundation (ASF) under one
- * or more contributor license agreements. See the NOTICE file
- * distributed with this work for additional information
- * regarding copyright ownership. The ASF licenses this file
- * to you under the Apache License, Version 2.0 (the
- * "License"); you may not use this file except in compliance
- * with the License. You may obtain a copy of the License at
+/*
+ * Tomitribe Confidential
  *
- * http://www.apache.org/licenses/LICENSE-2.0
+ * Copyright Tomitribe Corporation. 2017
  *
- * Unless required by applicable law or agreed to in writing,
- * software distributed under the License is distributed on an
- * "AS IS" BASIS, WITHOUT WARRANTIES OR CONDITIONS OF ANY
- * KIND, either express or implied. See the License for the
- * specific language governing permissions and limitations
- * under the License.
+ * The source code for this program is not published or otherwise divested 
+ * of its trade secrets, irrespective of what has been deposited with the 
+ * U.S. Copyright Office.
  */
-package com.tomitribe.fluxcapacitor.util;
+package com.tomitribe.fluxcapacitor.api;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -24,8 +15,8 @@ import java.util.concurrent.TimeUnit;
 
 public class Duration implements Comparable<Duration> {
 
-    private long time;
-    private TimeUnit unit;
+    long time;
+    TimeUnit unit;
 
     public Duration() {
     }
@@ -102,57 +93,8 @@ public class Duration implements Comparable<Duration> {
         this.unit = total.unit;
     }
 
-    public long getTime() {
-        return time;
-    }
-
     public long getTime(final TimeUnit unit) {
         return unit.convert(this.time, this.unit);
-    }
-
-    public void setTime(final long time) {
-        this.time = time;
-    }
-
-    public TimeUnit getUnit() {
-        return unit;
-    }
-
-    public void setUnit(final TimeUnit unit) {
-        this.unit = unit;
-    }
-
-//    public boolean equals(Object o) {
-//        if (this == o) return true;
-//        if (o == null || getClass() != o.getClass()) return false;
-//
-//        final Duration duration = (Duration) o;
-//
-//        if (time != duration.time) return false;
-//        if (unit != duration.unit) return false;
-//
-//        return true;
-//    }
-
-    //
-    private static class Normalize {
-        private long a;
-        private long b;
-        private TimeUnit base;
-
-        private Normalize(final Duration a, final Duration b) {
-            this.base = lowest(a, b);
-            this.a = a.unit == null ? a.time : base.convert(a.time, a.unit);
-            this.b = b.unit == null ? b.time : base.convert(b.time, b.unit);
-        }
-
-        private static TimeUnit lowest(final Duration a, final Duration b) {
-            if (a.unit == null) return b.unit;
-            if (b.unit == null) return a.unit;
-            if (a.time == 0) return b.unit;
-            if (b.time == 0) return a.unit;
-            return TimeUnit.values()[Math.min(a.unit.ordinal(), b.unit.ordinal())];
-        }
     }
 
     @Override
@@ -180,15 +122,6 @@ public class Duration implements Comparable<Duration> {
     public Duration add(final Duration that) {
         final Normalize n = new Normalize(this, that);
         return new Duration(n.a + n.b, n.base);
-    }
-
-    public Duration subtract(final Duration that) {
-        final Normalize n = new Normalize(this, that);
-        return new Duration(n.a - n.b, n.base);
-    }
-
-    public static Duration parse(final String text) {
-        return new Duration(text);
     }
 
     private static void invalidFormat(final String text) {
@@ -249,7 +182,7 @@ public class Duration implements Comparable<Duration> {
         if ("DAY".equalsIgnoreCase(u)) return TimeUnit.DAYS;
         if ("D".equalsIgnoreCase(u)) return TimeUnit.DAYS;
 
-        throw new IllegalArgumentException("Unknown time unit '" + u + "'.  Supported units " + Join.join(", ", lowercase(TimeUnit.values())));
+        throw new IllegalArgumentException("Unknown time unit '" + u + "'.  Supported units " + FluxCapacitor.join(", ", lowercase(TimeUnit.values())));
     }
 
     @Override
@@ -266,13 +199,5 @@ public class Duration implements Comparable<Duration> {
             list.add(unit.name().toLowerCase());
         }
         return list;
-    }
-
-
-    public static class DurationEditor extends java.beans.PropertyEditorSupport {
-        public void setAsText(final String text) {
-            final Duration d = Duration.parse(text);
-            setValue(d);
-        }
     }
 }

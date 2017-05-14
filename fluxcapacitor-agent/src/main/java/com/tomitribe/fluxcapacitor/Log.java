@@ -16,6 +16,8 @@
  */
 package com.tomitribe.fluxcapacitor;
 
+import com.tomitribe.fluxcapacitor.util.Join;
+
 import java.util.concurrent.atomic.AtomicBoolean;
 
 /**
@@ -45,8 +47,8 @@ public class Log {
 
     public static void err(final String format, final Object... details) {
         final String message = String.format(format, details);
-//        System.err.println(format + " " + Join.join(" ", details));
-        System.err.printf("%tF %<tT - FluxCapacitor: %s%n", System.currentTimeMillis(), message);
+        System.err.println(format + " " + Join.join(" ", details));
+//        System.err.printf("%tF %<tT - FluxCapacitor: %s%n", System.currentTimeMillis(), message);
     }
 
     public static void main(String[] args) {

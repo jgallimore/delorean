@@ -16,7 +16,7 @@
  */
 package com.tomitribe.fluxcapacitor.service;
 
-import com.tomitribe.fluxcapacitor.FluxCapacitor;
+import com.tomitribe.fluxcapacitor.api.FluxCapacitor;
 
 import javax.ejb.Lock;
 import javax.ejb.Singleton;
@@ -26,6 +26,7 @@ import javax.ws.rs.POST;
 import javax.ws.rs.Path;
 import javax.ws.rs.PathParam;
 import javax.ws.rs.Produces;
+import java.util.Date;
 
 import static javax.ejb.LockType.READ;
 import static javax.ws.rs.core.MediaType.APPLICATION_JSON;
@@ -38,23 +39,42 @@ public class FluxCapacitorService {
     @GET
     @Produces({APPLICATION_JSON})
     public Status get() {
-        return new Status(FluxCapacitor.getOffset(), System.currentTimeMillis());
+        return new Status(FluxCapacitor.getOffset(), new Date().getTime());
     }
 
     @Path("offset")
     @POST
     @Produces({APPLICATION_JSON})
-    public Status post(String offset) {
+    public Status offset(String offset) {
         FluxCapacitor.setOffset(offset);
-        return new Status(FluxCapacitor.getOffset(), System.currentTimeMillis());
+        return new Status(FluxCapacitor.getOffset(), new Date().getTime());
     }
 
     @Path("offset/{offset}")
     @POST
     @Produces({APPLICATION_JSON})
     @Consumes({APPLICATION_JSON})
-    public Status post(@PathParam("offset") long offset) {
+    public Status offset(@PathParam("offset") long offset) {
         FluxCapacitor.setOffset(offset);
-        return new Status(FluxCapacitor.getOffset(), System.currentTimeMillis());
+        return new Status(FluxCapacitor.getOffset(), new Date().getTime());
+    }
+
+    @Path("date")
+    @POST
+    @Produces({APPLICATION_JSON})
+    public Status date(String date) {
+
+
+        FluxCapacitor.setOffset(date);
+        return new Status(FluxCapacitor.getOffset(), new Date().getTime());
+    }
+
+    @Path("date/{date}")
+    @POST
+    @Produces({APPLICATION_JSON})
+    @Consumes({APPLICATION_JSON})
+    public Status date(@PathParam("date") long offset) {
+        FluxCapacitor.setOffset(offset);
+        return new Status(FluxCapacitor.getOffset(), new Date().getTime());
     }
 }

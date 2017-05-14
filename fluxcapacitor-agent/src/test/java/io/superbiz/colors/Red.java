@@ -16,7 +16,7 @@
  */
 package io.superbiz.colors;
 
-import com.tomitribe.fluxcapacitor.FluxCapacitor;
+import com.tomitribe.fluxcapacitor.api.FluxCapacitor;
 
 /**
  * @version $Revision$ $Date$

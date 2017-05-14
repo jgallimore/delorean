@@ -1,11 +1,8 @@
 package com.tomitribe.fluxcapacitor;
 
-import com.tomitribe.fluxcapacitor.util.Duration;
+import com.tomitribe.fluxcapacitor.api.FluxCapacitor;
 import org.junit.Assert;
 import org.junit.Test;
-
-import static java.util.concurrent.TimeUnit.MILLISECONDS;
-import static java.util.concurrent.TimeUnit.SECONDS;
 
 public class FluxCapacitorTest extends Assert {
 
@@ -17,14 +14,15 @@ public class FluxCapacitorTest extends Assert {
      */
     @Test
     public void testParseOffsetToMillis() throws Exception {
-        assertEquals(new Duration(2300, MILLISECONDS).getTime(MILLISECONDS), FluxCapacitor.parseOffsetToMillis("2 seconds and 300 milliseconds"));
-        assertEquals(new Duration(2300, MILLISECONDS).getTime(MILLISECONDS), FluxCapacitor.parseOffsetToMillis("2 seconds, 300 milliseconds"));
-        assertEquals(new Duration(2300, MILLISECONDS).getTime(MILLISECONDS), FluxCapacitor.parseOffsetToMillis("2 seconds,300 milliseconds"));
-        assertEquals(new Duration(125, SECONDS).getTime(MILLISECONDS), FluxCapacitor.parseOffsetToMillis("2 minutes and 5 seconds"));
 
-        assertEquals(new Duration(-2300, MILLISECONDS).getTime(MILLISECONDS), FluxCapacitor.parseOffsetToMillis("2 seconds and 300 milliseconds ago"));
-        assertEquals(new Duration(-2300, MILLISECONDS).getTime(MILLISECONDS), FluxCapacitor.parseOffsetToMillis("2 seconds, 300 milliseconds  ago"));
-        assertEquals(new Duration(-2300, MILLISECONDS).getTime(MILLISECONDS), FluxCapacitor.parseOffsetToMillis("2 seconds,300 milliseconds ago "));
-        assertEquals(new Duration(-125, SECONDS).getTime(MILLISECONDS), FluxCapacitor.parseOffsetToMillis("2 minutes and 5 seconds ago"));
+        assertEquals(2300, FluxCapacitor.parseOffsetToMillis("2 seconds and 300 milliseconds"));
+        assertEquals(2300, FluxCapacitor.parseOffsetToMillis("2 seconds, 300 milliseconds"));
+        assertEquals(2300, FluxCapacitor.parseOffsetToMillis("2 seconds,300 milliseconds"));
+        assertEquals(125000, FluxCapacitor.parseOffsetToMillis("2 minutes and 5 seconds"));
+
+        assertEquals(-2300, FluxCapacitor.parseOffsetToMillis("2 seconds and 300 milliseconds ago"));
+        assertEquals(-2300, FluxCapacitor.parseOffsetToMillis("2 seconds, 300 milliseconds  ago"));
+        assertEquals(-2300, FluxCapacitor.parseOffsetToMillis("2 seconds,300 milliseconds ago "));
+        assertEquals(-125000, FluxCapacitor.parseOffsetToMillis("2 minutes and 5 seconds ago"));
     }
 }
