@@ -12,26 +12,27 @@ package com.tomitribe.fluxcapacitor;
 import com.tomitribe.fluxcapacitor.api.Duration;
 import com.tomitribe.fluxcapacitor.api.FluxCapacitor;
 import com.tomitribe.fluxcapacitor.api.Normalize;
-import com.tomitribe.fluxcapacitor.gen.DurationDump;
-import com.tomitribe.fluxcapacitor.gen.FluxCapacitorDump;
-import com.tomitribe.fluxcapacitor.gen.NormalizeDump;
+import com.tomitribe.fluxcapacitor.util.Bytecode;
 import com.tomitribe.fluxcapacitor.util.Unsafe;
+
+import java.io.IOException;
 
 public class InstallFluxCapacitor {
 
     public static void install() {
         try {
-            install(FluxCapacitorDump.dump(), FluxCapacitor.class);
-            install(DurationDump.dump(), Duration.class);
-            install(NormalizeDump.dump(), Normalize.class);
+            install(FluxCapacitor.class);
+            install(Duration.class);
+            install(Normalize.class);
         } catch (Exception e) {
             e.printStackTrace();
         }
     }
 
-    private static void install(byte[] bytecode, final Class<?> clazz) {
+    private static void install(final Class<?> clazz) throws IOException {
+        final byte[] bytecode = RepackageApi.enhance(Bytecode.readClassFile(clazz), clazz.getName());
         final ClassLoader classLoader = Object.class.getClassLoader();
-        final String name = clazz.getName().replace("api", "gen");
+        final String name = clazz.getName().replace(Packages.from, Packages.to);
         Unsafe.defineClass(name, bytecode, 0, bytecode.length, classLoader, null);
     }
 }

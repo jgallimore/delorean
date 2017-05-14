@@ -27,7 +27,7 @@ import java.io.IOException;
 /**
  * @version $Revision$ $Date$
  */
-public class EnhancerTest extends Assert {
+public class UpdateMethodsTest extends Assert {
 
     @Test
     public void testBlue() throws Exception {
@@ -41,13 +41,13 @@ public class EnhancerTest extends Assert {
         Asmifier.asmify(afterClass, "after." + tag);
         final byte[] bytes = Bytecode.readClassFile(beforeClass);
 
-        final byte[] actualBytes = Enhancer.enhance(bytes, beforeClass.getName());
+        final byte[] actualBytes = UpdateMethods.enhance(bytes, beforeClass.getName());
         final byte[] expectedBytes = Bytecode.readClassFile(afterClass);
 
         final String expected;
         final String actual;
         try {
-            expected = asmify(expectedBytes).replaceAll("After", "");
+            expected = asmify(expectedBytes).replaceAll("After", "").replace("api", "gen");
             actual = asmify(actualBytes).replaceAll("Before", "");
         } catch (final Exception e) {
             e.printStackTrace();

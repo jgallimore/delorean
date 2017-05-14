@@ -80,7 +80,7 @@ public class Agent {
                                 final ProtectionDomain protectionDomain,
                                 final byte[] classfileBuffer) throws IllegalClassFormatException {
             try {
-                return Enhancer.enhance(classfileBuffer, className);
+                return UpdateMethods.enhance(classfileBuffer, className);
             } catch (final Throwable e) {
                 return classfileBuffer;
             }

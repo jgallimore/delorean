@@ -31,11 +31,11 @@ import org.objectweb.asm.Opcodes;
  *
  * @version $Revision$ $Date$
  */
-public class Enhancer extends ClassVisitor implements Opcodes {
+public class UpdateMethods extends ClassVisitor implements Opcodes {
 
     private int replaced;
 
-    public Enhancer(final ClassVisitor classVisitor) {
+    public UpdateMethods(final ClassVisitor classVisitor) {
         super(Opcodes.ASM5, classVisitor);
     }
 
@@ -43,11 +43,11 @@ public class Enhancer extends ClassVisitor implements Opcodes {
         try {
 
             final ClassWriter cw = new ClassWriter(ClassWriter.COMPUTE_MAXS);
-            final Enhancer enhancer = new Enhancer(cw);
-            Bytecode.read(bytes, enhancer);
+            final UpdateMethods updateMethods = new UpdateMethods(cw);
+            Bytecode.read(bytes, updateMethods);
 
-            if (enhancer.getReplaced() > 0) {
-                Log.debug("Replaced %s System.currentTimeMillis usages in %s", enhancer.getReplaced(), className);
+            if (updateMethods.getReplaced() > 0) {
+                Log.debug("Replaced %s System.currentTimeMillis usages in %s", updateMethods.getReplaced(), className);
             }
 
             return cw.toByteArray();
@@ -72,12 +72,12 @@ public class Enhancer extends ClassVisitor implements Opcodes {
                 if ("java/lang/System".equals(s) && "currentTimeMillis".equals(s1) && "()J".equals(s2)) {
 
                     replaced++;
-                    super.visitMethodInsn(i, "com/tomitribe/fluxcapacitor/gen/FluxCapacitor", s1, s2, b);
+                    super.visitMethodInsn(i, Packages.genClass, s1, s2, b);
 
                     // Replace the FluxCapacitor from the agent classpath with one in the bootstrap classpath
-                } else if ("com/tomitribe/fluxcapacitor/api/FluxCapacitor".equals(s)) {
+                } else if (Packages.apiClass.equals(s)) {
 
-                    super.visitMethodInsn(i, "com/tomitribe/fluxcapacitor/gen/FluxCapacitor", s1, s2, b);
+                    super.visitMethodInsn(i, Packages.genClass, s1, s2, b);
 
                     // Let the method through unmodified
                 } else {
