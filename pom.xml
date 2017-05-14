@@ -25,7 +25,7 @@
     <version>5</version>
   </parent>
 
-  <artifactId>fluxcapacitor-parent</artifactId>
+  <artifactId>delorean-parent</artifactId>
   <version>0.1-SNAPSHOT</version>
   <packaging>pom</packaging>
 
@@ -35,15 +35,15 @@
   </properties>
 
   <scm>
-    <connection>scm:git:git@github.com:tomitribe/fluxcapacitor.git</connection>
-    <url>scm:git:git@github.com:tomitribe/fluxcapacitor.git</url>
-    <developerConnection>scm:git:git@github.com:tomitribe/fluxcapacitor.git</developerConnection>
-    <tag>fluxcapacitor-0.1</tag>
+    <connection>scm:git:git@github.com:tomitribe/delorean.git</connection>
+    <url>scm:git:git@github.com:tomitribe/delorean.git</url>
+    <developerConnection>scm:git:git@github.com:tomitribe/delorean.git</developerConnection>
+    <tag>delorean-0.1</tag>
   </scm>
 
   <modules>
-    <module>fluxcapacitor-agent</module>
-    <module>fluxcapacitor-service</module>
+    <module>delorean-agent</module>
+    <module>delorean-service</module>
   </modules>
 
   <build>
