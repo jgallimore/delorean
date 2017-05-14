@@ -53,8 +53,8 @@ public class AgentTest extends Assert {
     public void test() throws Exception {
 
         final Java.Result result = Java.java(
-                "-Dfluxcapacitor.debug=true",
-                "-Dfluxcapacitor.offset=30 days ago",
+                "-Ddelorean.debug=true",
+                "-Ddelorean.offset=30 days ago",
                 "-javaagent:" + agentJar.getAbsolutePath(),
                 "-classpath",
                 testJar.getAbsolutePath(),
@@ -65,9 +65,9 @@ public class AgentTest extends Assert {
         final String out = result.getOut();
         final String err = result.getErr();
         System.out.println(out);
-        assertTrue(out.contains("FluxCapacitor: Setting offset to '30 days ago'"));
-        assertTrue(out.contains("FluxCapacitor: Agent installed successfully."));
-        assertTrue(out.contains("FluxCapacitor: Replaced 3 System.currentTimeMillis usages in io/superbiz/colors/Blue"));
+        assertTrue(out.contains("Delorean: Setting offset to '30 days ago'"));
+        assertTrue(out.contains("Delorean: Agent installed successfully."));
+        assertTrue(out.contains("Delorean: Replaced 3 System.currentTimeMillis usages in io/superbiz/colors/Blue"));
     }
 
 }

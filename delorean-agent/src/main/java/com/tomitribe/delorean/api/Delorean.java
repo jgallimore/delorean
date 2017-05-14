@@ -21,8 +21,8 @@ public class Delorean {
     private static final AtomicLong offset = new AtomicLong(0);
 
     static {
-        debug.set(Boolean.getBoolean("fluxcapacitor.debug"));
-        setOffset(System.getProperty("fluxcapacitor.offset", "0 milliseconds"));
+        debug.set(Boolean.getBoolean("delorean.debug"));
+        setOffset(System.getProperty("delorean.offset", "0 milliseconds"));
     }
 
     public static long currentTimeMillis() {
@@ -79,6 +79,6 @@ public class Delorean {
     private static void log(final String format, final Object... details) {
         final String message = String.format(format, details);
         //        System.out.println(format + " " + Join.join(" ", details));
-        System.out.printf("%tF %<tT - FluxCapacitor: %s%n", System.currentTimeMillis(), message);
+        System.out.printf("%tF %<tT - Delorean: %s%n", System.currentTimeMillis(), message);
     }
 }

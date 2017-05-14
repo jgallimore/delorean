@@ -29,7 +29,7 @@ public class Agent {
     private static Instrumentation instrumentation;
 
     static {
-        InstallFluxCapacitor.install();
+        FluxCapacitor.install();
     }
 
     private Agent() {
@@ -59,7 +59,7 @@ public class Agent {
     private static void initialize(final String agentArgs, final Instrumentation instrumentation) {
         try {
 
-            Log.debug.set(Boolean.getBoolean("fluxcapacitor.debug"));
+            Log.debug.set(Boolean.getBoolean("delorean.debug"));
 
             instrumentation.addTransformer(new Transformer());
             Log.log("Agent installed successfully.");

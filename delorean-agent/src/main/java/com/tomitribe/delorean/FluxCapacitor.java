@@ -17,7 +17,7 @@ import com.tomitribe.delorean.util.Unsafe;
 
 import java.io.IOException;
 
-public class InstallFluxCapacitor {
+public class FluxCapacitor {
 
     public static void install() {
         try {
