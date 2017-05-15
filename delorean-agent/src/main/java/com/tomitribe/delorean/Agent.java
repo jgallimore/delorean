@@ -19,7 +19,14 @@ package com.tomitribe.delorean;
 import java.lang.instrument.ClassFileTransformer;
 import java.lang.instrument.IllegalClassFormatException;
 import java.lang.instrument.Instrumentation;
+import java.lang.instrument.UnmodifiableClassException;
 import java.security.ProtectionDomain;
+import java.util.Currency;
+import java.util.Date;
+import java.util.GregorianCalendar;
+import java.util.ResourceBundle;
+import java.util.Timer;
+import java.util.logging.LogRecord;
 
 /**
  * @version $Rev$ $Date$
@@ -60,15 +67,39 @@ public class Agent {
         try {
 
             Log.debug.set(Boolean.getBoolean("delorean.debug"));
-
-            instrumentation.addTransformer(new Transformer());
+            instrumentation.addTransformer(new Transformer(), true);
             Log.log("Agent installed successfully.");
+
+            retransform(instrumentation,
+                    Date.class,
+                    GregorianCalendar.class,
+                    Thread.class,
+                    java.time.Clock.class,
+                    Currency.class,
+                    Timer.class,
+                    LogRecord.class,
+                    ResourceBundle.class
+            );
 
             boolean modifiableClass = instrumentation.isModifiableClass(System.class);
             System.out.println(modifiableClass);
         } catch (final Throwable e) {
             Log.err("Agent installation failed %s", e.getMessage());
             e.printStackTrace();
+        }
+    }
+
+    private static void retransform(Instrumentation instrumentation, Class<?>... clazzes) throws UnmodifiableClassException {
+        for (final Class<?> clazz : clazzes) {
+            retransform(instrumentation, clazz);
+        }
+    }
+    private static void retransform(Instrumentation instrumentation, Class<?> clazz) throws UnmodifiableClassException {
+        if (instrumentation.isModifiableClass(clazz)) {
+            Log.debug("Retransform %s", clazz);
+            instrumentation.retransformClasses(clazz);
+        } else {
+            Log.err("Cannot be retransformed %s", clazz);
         }
     }
 

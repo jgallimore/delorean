@@ -16,8 +16,12 @@ import com.tomitribe.delorean.util.Bytecode;
 import com.tomitribe.delorean.util.Unsafe;
 
 import java.io.IOException;
+import java.util.Date;
 
 public class FluxCapacitor {
+    public static void main(String[] args) {
+        install();
+    }
 
     public static void install() {
         try {

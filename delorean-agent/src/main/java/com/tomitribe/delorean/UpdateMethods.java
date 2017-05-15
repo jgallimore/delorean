@@ -41,13 +41,14 @@ public class UpdateMethods extends ClassVisitor implements Opcodes {
 
     public static byte[] enhance(byte[] bytes, final String className) {
         try {
+            Log.debug("Visit %s", className);
 
             final ClassWriter cw = new ClassWriter(ClassWriter.COMPUTE_MAXS);
             final UpdateMethods updateMethods = new UpdateMethods(cw);
             Bytecode.read(bytes, updateMethods);
 
             if (updateMethods.getReplaced() > 0) {
-                Log.debug("Replaced %s System.currentTimeMillis usages in %s", updateMethods.getReplaced(), className);
+                Log.log("Replaced %s System.currentTimeMillis usages in %s", updateMethods.getReplaced(), className);
             }
 
             return cw.toByteArray();

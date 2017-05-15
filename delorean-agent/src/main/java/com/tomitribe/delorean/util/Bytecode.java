@@ -33,7 +33,11 @@ public class Bytecode {
     }
 
     public static byte[] readClassFile(final Class clazz) throws IOException {
-        return readClassFile(clazz.getClassLoader(), clazz);
+        ClassLoader classLoader = clazz.getClassLoader();
+        if (classLoader == null) {
+            classLoader = Thread.currentThread().getContextClassLoader();
+        }
+        return readClassFile(classLoader, clazz);
     }
 
     public static byte[] readClassFile(final ClassLoader classLoader, final Class clazz) throws IOException {
