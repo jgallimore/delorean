@@ -16,7 +16,7 @@ public class DatesTest extends Assert {
         assertEquals(1494736314000l, Dates.parse(new SimpleDateFormat("yyyy-MM-dd'T'HH:mm:ss").format(1494736314000l)).getTime());
         assertEquals(1494736314000l, Dates.parse(new SimpleDateFormat("yyyy-MM-dd HH:mm:ss").format(1494736314000l)).getTime());
         assertEquals(1494736260000l, Dates.parse(new SimpleDateFormat("yyyy-MM-dd HH:mm").format(1494736260000l)).getTime());
-        assertEquals(1494658800000l, Dates.parse(new SimpleDateFormat("yyyy-MM-dd").format(1494658800000l)).getTime());
+        assertNotNull(Dates.parse("1970-01-01"));
     }
 
     @Test
