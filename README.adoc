@@ -1,0 +1,203 @@
+# Delorean
+
+Time travel isn't possible, but this is the next best thing.
+
+Install delorean as a Java Agent and it will rewrite the bytecode in your JVM, replacing usages of System.currentTimeMillis with a special implementation that calculates the date factoring in an offset.  Even classes like `java.util.Date` are updated.
+
+
+The offset can be set via a system property or via a REST API deployable via the delorean-service war file.
+
+Once installed your JVM can travel through time.
+
+# System Properties
+
+The time the delorean will travel to can be set via system property as follows:
+
+----
+delorean.debug = false
+delorean.offset = 0 milliseconds
+----
+
+# Time Expressions
+
+
+The offset can be expressed in the following ways:
+
+ - `1 hour`
+ - `27 minutes`
+ - `10 seconds`
+
+For convenience it is possible to specify a compound form, such as:
+
+ - `3 days and 2 hours`
+ - `1 hour, 45 minutes`
+ - `15 minutes, 23 seconds, and 10 milliseconds`
+
+Spaces are also optional between the number and the time unit, which can be nice when using the abbreviated forms:
+
+ - `1hr`
+ - `27m`
+ - `10s`
+ - `3d and 2hr`
+ - `1hr, 45min`
+ - `15m, 23s, and 10ms`
+
+To specify an offset in the past, simply add ` ago` to the end as follows:
+
+ - `1 hour ago`
+ - `27 minutes ago`
+ - `10 seconds ago`
+
+The highest unit that can be expressed is a day, this a week would be specified as `7 days` and a year as `365 days`.
+
+# REST API
+
+
+The webapp has the following endpoints:
+
+----
+GET http://localhost:8080/delorean-service-0.1-SNAPSHOT/delorean/
+POST http://localhost:8080/delorean-service-0.1-SNAPSHOT/delorean/date
+POST http://localhost:8080/delorean-service-0.1-SNAPSHOT/delorean/date/{date}
+POST http://localhost:8080/delorean-service-0.1-SNAPSHOT/delorean/offset
+POST http://localhost:8080/delorean-service-0.1-SNAPSHOT/delorean/offset/decrement
+POST http://localhost:8080/delorean-service-0.1-SNAPSHOT/delorean/offset/decrement/{delta}
+POST http://localhost:8080/delorean-service-0.1-SNAPSHOT/delorean/offset/increment
+POST http://localhost:8080/delorean-service-0.1-SNAPSHOT/delorean/offset/increment/{delta}
+POST http://localhost:8080/delorean-service-0.1-SNAPSHOT/delorean/offset/{offset}
+----
+
+## Set the Offset
+
+All time calculation is done by specifying an offset from the real value of `System.currentTimeMillis`.  The fake time reported to the modified bytecode will be effectively `System.currentTimeMillis() + offset`
+
+Each call to this endpoint flatly overwrites the previous offset.  Thus, this call is idempotent.  Calling it several times will result in the same offset.
+
+The offset can be set explicitly in milliseconds as follows:
+
+----
+$ curl -s -X POST http://localhost:8080/delorean-service-0.1-SNAPSHOT/delorean/offset/-12345678000 | python -m json.tool
+{
+    "status": {
+        "currentTime": "2016-12-22 18:52:31",
+        "currentTimeMillis": 1494807229356,
+        "offset": "142 days, 21 hours, 21 minutes and 18 seconds ago",
+        "offsetMillis": -12345678000
+    }
+}
+----
+
+The offset can be posted as text using a Time Expression as well:
+
+----
+$ curl -s -d "42 days ago" http://localhost:8080/delorean-service-0.1-SNAPSHOT/delorean/offset/ | python -m json.tool
+{
+    "status": {
+        "currentTime": "2017-04-02 17:15:21",
+        "currentTimeMillis": 1494807321708,
+        "offset": "42 days ago",
+        "offsetMillis": -3628800000
+    }
+}
+----
+
+Note, usages of `-s` and `python` are simply for readability in output.  Scripts would likely not use them and simply do:
+
+----
+$ curl -d "42 days, 12 hours and 5 seconds ago" http://localhost:8080/delorean-service-0.1-SNAPSHOT/delorean/offset/
+{"status":{"currentTime":"2017-04-02 05:16:55","currentTimeMillis":1494807420559,"offset":"42 days, 12 hours and 5 seconds ago","offsetMillis":-3672005000}}
+----
+
+## Reset the Offset
+
+Resetting the offset is as simple as:
+
+----
+$ curl -d "0 ms" http://localhost:8080/delorean-service-0.1-SNAPSHOT/delorean/offset/
+{"status":{"currentTime":"2017-05-14 17:24:54","currentTimeMillis":1494807894061,"offset":"0 nanoseconds","offsetMillis":0}}
+----
+
+## Increment or Decrement the Offset
+
+It is possible to shave time from or add time to the current offset.  If the current offset is `30 days` and you increment it by `1 day`, the new offset will be `31 days`.
+
+Thus, this call is NOT idempotent.  Calling it several times will modify the current offset and yield a different result.  This is handy in scripts where there is a desire to loop forward or backwards N times.  For example, to set the offset to one year ago and then increment forward to the present day one week at a time, you can:
+
+----
+curl -d "365 days ago" http://localhost:8080/delorean-service-0.1-SNAPSHOT/delorean/offset/
+
+for n in {1..52}; do
+    curl -d "7 days" http://localhost:8080/delorean-service-0.1-SNAPSHOT/delorean/offset/increment
+done
+
+----
+
+The above would yeild output like the following (truncated):
+
+----
+{"status":{"currentTime":"2016-05-14 17:50:07","currentTimeMillis":1494809407961,"offset":"365 days ago","offsetMillis":-31536000000}}
+{"status":{"currentTime":"2016-05-21 17:50:07","currentTimeMillis":1494809407975,"offset":"358 days ago","offsetMillis":-30931200000}}
+{"status":{"currentTime":"2016-05-28 17:50:07","currentTimeMillis":1494809407989,"offset":"351 days ago","offsetMillis":-30326400000}}
+{"status":{"currentTime":"2016-06-04 17:50:08","currentTimeMillis":1494809408008,"offset":"344 days ago","offsetMillis":-29721600000}}
+{"status":{"currentTime":"2016-06-11 17:50:08","currentTimeMillis":1494809408023,"offset":"337 days ago","offsetMillis":-29116800000}}
+{"status":{"currentTime":"2016-06-18 17:50:08","currentTimeMillis":1494809408035,"offset":"330 days ago","offsetMillis":-28512000000}}
+{"status":{"currentTime":"2016-06-25 17:50:08","currentTimeMillis":1494809408048,"offset":"323 days ago","offsetMillis":-27907200000}}
+{"status":{"currentTime":"2016-07-02 17:50:08","currentTimeMillis":1494809408061,"offset":"316 days ago","offsetMillis":-27302400000}}
+{"status":{"currentTime":"2016-07-09 17:50:08","currentTimeMillis":1494809408078,"offset":"309 days ago","offsetMillis":-26697600000}}
+{"status":{"currentTime":"2016-07-16 17:50:08","currentTimeMillis":1494809408094,"offset":"302 days ago","offsetMillis":-26092800000}}
+{"status":{"currentTime":"2016-07-23 17:50:08","currentTimeMillis":1494809408109,"offset":"295 days ago","offsetMillis":-25488000000}}
+{"status":{"currentTime":"2016-07-30 17:50:08","currentTimeMillis":1494809408123,"offset":"288 days ago","offsetMillis":-24883200000}}
+{"status":{"currentTime":"2016-08-06 17:50:08","currentTimeMillis":1494809408137,"offset":"281 days ago","offsetMillis":-24278400000}}
+{"status":{"currentTime":"2016-08-13 17:50:08","currentTimeMillis":1494809408150,"offset":"274 days ago","offsetMillis":-23673600000}}
+...
+----
+
+## Travel to a Date
+
+It is possible to set the offset such the that the System.currentTimeMillis appears to be at a specific date.
+
+----
+$ curl -d "1976-03-30" http://localhost:8080/delorean-service-0.1-SNAPSHOT/delorean/date
+{"status":{"currentTime":"1976-03-30 00:00:00","currentTimeMillis":1494808635914,"offset":"15020 days, 16 hours, 37 minutes, 15 seconds and 914 milliseconds ago","offsetMillis":-1297787835914}}
+----
+
+Of course this is still an offset.  Time is not frozen and will still march forward.
+
+----
+mingus:/tmp 05:42:13
+$ curl -d "1976-03-30" http://localhost:8080/delorean-service-0.1-SNAPSHOT/delorean/date
+{"status":{"currentTime":"1976-03-30 00:00:00","currentTimeMillis":1494808938478,"offset":"15020 days, 16 hours, 42 minutes, 18 se...
+mingus:/tmp 05:42:18
+$ for n in {1..5}; do curl http://localhost:8080/delorean-service-0.1-SNAPSHOT/delorean && sleep 2 && echo ""; done
+{"status":{"currentTime":"1976-03-30 00:00:02","currentTimeMillis":1494808941349,"offset":"15020 days, 16 hours, 42 minutes, 18 se...
+{"status":{"currentTime":"1976-03-30 00:00:04","currentTimeMillis":1494808943374,"offset":"15020 days, 16 hours, 42 minutes, 18 se...
+{"status":{"currentTime":"1976-03-30 00:00:06","currentTimeMillis":1494808945401,"offset":"15020 days, 16 hours, 42 minutes, 18 se...
+{"status":{"currentTime":"1976-03-30 00:00:08","currentTimeMillis":1494808947425,"offset":"15020 days, 16 hours, 42 minutes, 18 se...
+{"status":{"currentTime":"1976-03-30 00:00:10","currentTimeMillis":1494808949446,"offset":"15020 days, 16 hours, 42 minutes, 18 se...
+----
+
+### Date Formats
+
+The following date formats are supported
+
+ - `yyyy-MM-dd'T'HH:mm:ss.SSSZ`
+ - `yyyy-MM-dd'T'HH:mm:ss`
+ - `yyyy-MM-dd HH:mm:ss z`
+ - `yyyy-MM-dd HH:mm z`
+ - `yyyy-MM-dd z`
+ - `yyyy-MM-dd HH:mm:ss`
+ - `yyyy-MM-dd HH:mm`
+ - `yyyy-MM-dd`
+
+For example:
+
+ - `2017-05-14T17:57:12.382-0700`
+ - `2017-05-14T17:57:12`
+ - `2017-05-14 17:57:12 PDT`
+ - `2017-05-14 17:57 PDT`
+ - `2017-05-14 PDT`
+ - `2017-05-14 17:57:12`
+ - `2017-05-14 17:57`
+ - `2017-05-14`
+
+It should be noted that if the time zone is not present, you will get the server's default local timezone.  If you want UTC, you should specify UTC.
