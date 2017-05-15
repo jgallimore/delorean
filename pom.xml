@@ -22,7 +22,7 @@
   <parent>
     <groupId>com.tomitribe</groupId>
     <artifactId>tomitribe-parent</artifactId>
-    <version>5</version>
+    <version>8</version>
   </parent>
 
   <artifactId>delorean-parent</artifactId>
