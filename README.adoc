@@ -202,7 +202,7 @@ For example:
 
 It should be noted that if the time zone is not present, you will get the server's default local timezone.  If you want UTC, you should specify UTC.
 
-# Installing Agent
+## Installing Agent
 
 The JVM flag for adding the agent would look something like the following:
 
