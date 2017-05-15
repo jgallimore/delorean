@@ -201,3 +201,22 @@ For example:
  - `2017-05-14`
 
 It should be noted that if the time zone is not present, you will get the server's default local timezone.  If you want UTC, you should specify UTC.
+
+# Installing Agent
+
+The JVM flag for adding the agent would look something like the following:
+
+`-javaagent:/Users/dblevins/.m2/repository/com/tomitribe/delorean-agent/1.0/delorean-agent-1.0.jar`
+
+For TomEE, this can be added via JAVA_OPTS
+
+----
+export JAVA_OPTS="-javaagent:/Users/dblevins/.m2/repository/com/tomitribe/delorean-agent/1.0/delorean-agent-1.0.jar $JAVA_OPTS"
+----
+
+From here the `delorean-service-1.0.war` simply needs to be copied into the TomEE webapps directory.
+
+----
+cp /Users/dblevins/.m2/repository/com/tomitribe/delorean-service/1.0/delorean-service-1.0.war $CATALINA_HOME/webapps/
+----
+
