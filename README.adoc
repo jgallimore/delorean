@@ -9,7 +9,7 @@ The offset can be set via a system property or via a REST API deployable via the
 
 Once installed your JVM can travel through time.
 
-# System Properties
+## System Properties
 
 The time the delorean will travel to can be set via system property as follows:
 
@@ -18,7 +18,7 @@ delorean.debug = false
 delorean.offset = 0 milliseconds
 ----
 
-# Time Expressions
+## Time Expressions
 
 
 The offset can be expressed in the following ways:
@@ -50,7 +50,7 @@ To specify an offset in the past, simply add ` ago` to the end as follows:
 
 The highest unit that can be expressed is a day, this a week would be specified as `7 days` and a year as `365 days`.
 
-# REST API
+## REST API
 
 
 The webapp has the following endpoints:
@@ -67,7 +67,7 @@ POST http://localhost:8080/delorean-service-0.1-SNAPSHOT/delorean/offset/increme
 POST http://localhost:8080/delorean-service-0.1-SNAPSHOT/delorean/offset/{offset}
 ----
 
-## Set the Offset
+### Set the Offset
 
 All time calculation is done by specifying an offset from the real value of `System.currentTimeMillis`.  The fake time reported to the modified bytecode will be effectively `System.currentTimeMillis() + offset`
 
@@ -108,7 +108,7 @@ $ curl -d "42 days, 12 hours and 5 seconds ago" http://localhost:8080/delorean-s
 {"status":{"currentTime":"2017-04-02 05:16:55","currentTimeMillis":1494807420559,"offset":"42 days, 12 hours and 5 seconds ago","offsetMillis":-3672005000}}
 ----
 
-## Reset the Offset
+### Reset the Offset
 
 Resetting the offset is as simple as:
 
@@ -117,7 +117,7 @@ $ curl -d "0 ms" http://localhost:8080/delorean-service-0.1-SNAPSHOT/delorean/of
 {"status":{"currentTime":"2017-05-14 17:24:54","currentTimeMillis":1494807894061,"offset":"0 nanoseconds","offsetMillis":0}}
 ----
 
-## Increment or Decrement the Offset
+### Increment or Decrement the Offset
 
 It is possible to shave time from or add time to the current offset.  If the current offset is `30 days` and you increment it by `1 day`, the new offset will be `31 days`.
 
@@ -152,7 +152,7 @@ The above would yeild output like the following (truncated):
 ...
 ----
 
-## Travel to a Date
+### Travel to a Date
 
 It is possible to set the offset such the that the System.currentTimeMillis appears to be at a specific date.
 
@@ -176,7 +176,7 @@ $ for n in {1..5}; do curl http://localhost:8080/delorean-service-0.1-SNAPSHOT/d
 {"status":{"currentTime":"1976-03-30 00:00:10","currentTimeMillis":1494808949446,"offset":"15020 days, 16 hours, 42 minutes, 18 se...
 ----
 
-### Date Formats
+#### Date Formats
 
 The following date formats are supported
 
