@@ -28,6 +28,7 @@ public class Delorean {
     public static long currentTimeMillis() {
         return System.currentTimeMillis() + offset.get();
     }
+
     public static long actualTimeMillis() {
         return System.currentTimeMillis();
     }
@@ -78,7 +79,6 @@ public class Delorean {
 
     private static void log(final String format, final Object... details) {
         final String message = String.format(format, details);
-        //        System.out.println(format + " " + Join.join(" ", details));
-        System.out.printf("%tF %<tT - Delorean: %s%n", System.currentTimeMillis(), message);
+        System.out.printf("Delorean: %s%n", message);
     }
 }

@@ -34,21 +34,18 @@ public class Log {
     public static void debug(final String format, final Object... details) {
         if (debug.get()) {
             final String message = String.format(format, details);
-//            System.out.println(format + " " + Join.join(" ", details));
-            System.out.printf("%tF %<tT - Delorean: %s%n", System.currentTimeMillis(), message);
+            System.out.printf("Delorean: %s%n", message);
         }
     }
 
     public static void log(final String format, final Object... details) {
         final String message = String.format(format, details);
-//        System.out.println(format + " " + Join.join(" ", details));
-        System.out.printf("%tF %<tT - Delorean: %s%n", System.currentTimeMillis(), message);
+        System.out.printf("Delorean: %s%n", message);
     }
 
     public static void err(final String format, final Object... details) {
         final String message = String.format(format, details);
-        System.err.println(format + " " + Join.join(" ", details));
-//        System.err.printf("%tF %<tT - FluxCapacitor: %s%n", System.currentTimeMillis(), message);
+        System.err.printf("Delorean: %s%n", message);
     }
 
     public static void main(String[] args) {
