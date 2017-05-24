@@ -56,15 +56,15 @@ The highest unit that can be expressed is a day, this a week would be specified 
 The webapp has the following endpoints:
 
 ----
-GET http://localhost:8080/delorean-service-0.1-SNAPSHOT/delorean/
-POST http://localhost:8080/delorean-service-0.1-SNAPSHOT/delorean/date
-POST http://localhost:8080/delorean-service-0.1-SNAPSHOT/delorean/date/{date}
-POST http://localhost:8080/delorean-service-0.1-SNAPSHOT/delorean/offset
-POST http://localhost:8080/delorean-service-0.1-SNAPSHOT/delorean/offset/decrement
-POST http://localhost:8080/delorean-service-0.1-SNAPSHOT/delorean/offset/decrement/{delta}
-POST http://localhost:8080/delorean-service-0.1-SNAPSHOT/delorean/offset/increment
-POST http://localhost:8080/delorean-service-0.1-SNAPSHOT/delorean/offset/increment/{delta}
-POST http://localhost:8080/delorean-service-0.1-SNAPSHOT/delorean/offset/{offset}
+GET http://localhost:8080/delorean-service-0.1-SNAPSHOT/api/delorean/
+POST http://localhost:8080/delorean-service-0.1-SNAPSHOT/api/delorean/date
+POST http://localhost:8080/delorean-service-0.1-SNAPSHOT/api/delorean/date/{date}
+POST http://localhost:8080/delorean-service-0.1-SNAPSHOT/api/delorean/offset
+POST http://localhost:8080/delorean-service-0.1-SNAPSHOT/api/delorean/offset/decrement
+POST http://localhost:8080/delorean-service-0.1-SNAPSHOT/api/delorean/offset/decrement/{delta}
+POST http://localhost:8080/delorean-service-0.1-SNAPSHOT/api/delorean/offset/increment
+POST http://localhost:8080/delorean-service-0.1-SNAPSHOT/api/delorean/offset/increment/{delta}
+POST http://localhost:8080/delorean-service-0.1-SNAPSHOT/api/delorean/offset/{offset}
 ----
 
 ### Set the Offset
@@ -76,7 +76,7 @@ Each call to this endpoint flatly overwrites the previous offset.  Thus, this ca
 The offset can be set explicitly in milliseconds as follows:
 
 ----
-$ curl -s -X POST http://localhost:8080/delorean-service-0.1-SNAPSHOT/delorean/offset/-12345678000 | python -m json.tool
+$ curl -s -X POST http://localhost:8080/delorean-service-0.1-SNAPSHOT/api/delorean/offset/-12345678000 | python -m json.tool
 {
     "status": {
         "currentTime": "2016-12-22 18:52:31",
@@ -90,7 +90,7 @@ $ curl -s -X POST http://localhost:8080/delorean-service-0.1-SNAPSHOT/delorean/o
 The offset can be posted as text using a Time Expression as well:
 
 ----
-$ curl -s -d "42 days ago" http://localhost:8080/delorean-service-0.1-SNAPSHOT/delorean/offset/ | python -m json.tool
+$ curl -s -d "42 days ago" http://localhost:8080/delorean-service-0.1-SNAPSHOT/api/delorean/offset/ | python -m json.tool
 {
     "status": {
         "currentTime": "2017-04-02 17:15:21",
@@ -104,7 +104,7 @@ $ curl -s -d "42 days ago" http://localhost:8080/delorean-service-0.1-SNAPSHOT/d
 Note, usages of `-s` and `python` are simply for readability in output.  Scripts would likely not use them and simply do:
 
 ----
-$ curl -d "42 days, 12 hours and 5 seconds ago" http://localhost:8080/delorean-service-0.1-SNAPSHOT/delorean/offset/
+$ curl -d "42 days, 12 hours and 5 seconds ago" http://localhost:8080/delorean-service-0.1-SNAPSHOT/api/delorean/offset/
 {"status":{"currentTime":"2017-04-02 05:16:55","currentTimeMillis":1494807420559,"offset":"42 days, 12 hours and 5 seconds ago","offsetMillis":-3672005000}}
 ----
 
@@ -113,7 +113,7 @@ $ curl -d "42 days, 12 hours and 5 seconds ago" http://localhost:8080/delorean-s
 Resetting the offset is as simple as:
 
 ----
-$ curl -d "0 ms" http://localhost:8080/delorean-service-0.1-SNAPSHOT/delorean/offset/
+$ curl -d "0 ms" http://localhost:8080/delorean-service-0.1-SNAPSHOT/api/delorean/offset/
 {"status":{"currentTime":"2017-05-14 17:24:54","currentTimeMillis":1494807894061,"offset":"0 nanoseconds","offsetMillis":0}}
 ----
 
@@ -124,10 +124,10 @@ It is possible to shave time from or add time to the current offset.  If the cur
 Thus, this call is NOT idempotent.  Calling it several times will modify the current offset and yield a different result.  This is handy in scripts where there is a desire to loop forward or backwards N times.  For example, to set the offset to one year ago and then increment forward to the present day one week at a time, you can:
 
 ----
-curl -d "365 days ago" http://localhost:8080/delorean-service-0.1-SNAPSHOT/delorean/offset/
+curl -d "365 days ago" http://localhost:8080/delorean-service-0.1-SNAPSHOT/api/delorean/offset/
 
 for n in {1..52}; do
-    curl -d "7 days" http://localhost:8080/delorean-service-0.1-SNAPSHOT/delorean/offset/increment
+    curl -d "7 days" http://localhost:8080/delorean-service-0.1-SNAPSHOT/api/delorean/offset/increment
 done
 
 ----
@@ -157,7 +157,7 @@ The above would yeild output like the following (truncated):
 It is possible to set the offset such the that the System.currentTimeMillis appears to be at a specific date.
 
 ----
-$ curl -d "1976-03-30" http://localhost:8080/delorean-service-0.1-SNAPSHOT/delorean/date
+$ curl -d "1976-03-30" http://localhost:8080/delorean-service-0.1-SNAPSHOT/api/delorean/date
 {"status":{"currentTime":"1976-03-30 00:00:00","currentTimeMillis":1494808635914,"offset":"15020 days, 16 hours, 37 minutes, 15 seconds and 914 milliseconds ago","offsetMillis":-1297787835914}}
 ----
 
@@ -165,10 +165,10 @@ Of course this is still an offset.  Time is not frozen and will still march forw
 
 ----
 mingus:/tmp 05:42:13
-$ curl -d "1976-03-30" http://localhost:8080/delorean-service-0.1-SNAPSHOT/delorean/date
+$ curl -d "1976-03-30" http://localhost:8080/delorean-service-0.1-SNAPSHOT/api/delorean/date
 {"status":{"currentTime":"1976-03-30 00:00:00","currentTimeMillis":1494808938478,"offset":"15020 days, 16 hours, 42 minutes, 18 se...
 mingus:/tmp 05:42:18
-$ for n in {1..5}; do curl http://localhost:8080/delorean-service-0.1-SNAPSHOT/delorean && sleep 2 && echo ""; done
+$ for n in {1..5}; do curl http://localhost:8080/delorean-service-0.1-SNAPSHOT/api/delorean && sleep 2 && echo ""; done
 {"status":{"currentTime":"1976-03-30 00:00:02","currentTimeMillis":1494808941349,"offset":"15020 days, 16 hours, 42 minutes, 18 se...
 {"status":{"currentTime":"1976-03-30 00:00:04","currentTimeMillis":1494808943374,"offset":"15020 days, 16 hours, 42 minutes, 18 se...
 {"status":{"currentTime":"1976-03-30 00:00:06","currentTimeMillis":1494808945401,"offset":"15020 days, 16 hours, 42 minutes, 18 se...
