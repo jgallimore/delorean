@@ -30,7 +30,7 @@ public class AsmModifiersTest extends TestCase {
 
     public void testIsPublic() throws Exception {
         final ClassReader classReader = new ClassReader(IsPublic.class.getName());
-        classReader.accept(new ClassVisitor(Opcodes.ASM5) {
+        classReader.accept(new ClassVisitor(Opcodes.ASM9) {
             @Override
             public MethodVisitor visitMethod(final int access, final String name, final String desc, final String signature, final String[] exceptions) {
                 if (name.equals("<init>")) {
@@ -53,7 +53,7 @@ public class AsmModifiersTest extends TestCase {
 
     public void testIsPrivate() throws Exception {
         final ClassReader classReader = new ClassReader(IsPrivate.class.getName());
-        classReader.accept(new ClassVisitor(Opcodes.ASM5) {
+        classReader.accept(new ClassVisitor(Opcodes.ASM9) {
             @Override
             public MethodVisitor visitMethod(final int access, final String name, final String desc, final String signature, final String[] exceptions) {
                 if (name.equals("<init>")) {
@@ -76,7 +76,7 @@ public class AsmModifiersTest extends TestCase {
 
     public void testIsProtected() throws Exception {
         final ClassReader classReader = new ClassReader(IsProtected.class.getName());
-        classReader.accept(new ClassVisitor(Opcodes.ASM5) {
+        classReader.accept(new ClassVisitor(Opcodes.ASM9) {
             @Override
             public MethodVisitor visitMethod(final int access, final String name, final String desc, final String signature, final String[] exceptions) {
                 if (name.equals("<init>")) {
@@ -100,7 +100,7 @@ public class AsmModifiersTest extends TestCase {
 
     public void testIsStatic() throws Exception {
         final ClassReader classReader = new ClassReader(IsStatic.class.getName());
-        classReader.accept(new ClassVisitor(Opcodes.ASM5) {
+        classReader.accept(new ClassVisitor(Opcodes.ASM9) {
             @Override
             public MethodVisitor visitMethod(final int access, final String name, final String desc, final String signature, final String[] exceptions) {
                 if (name.equals("<init>")) {
@@ -124,7 +124,7 @@ public class AsmModifiersTest extends TestCase {
 
     public void testIsFinal() throws Exception {
         final ClassReader classReader = new ClassReader(IsFinal.class.getName());
-        classReader.accept(new ClassVisitor(Opcodes.ASM5) {
+        classReader.accept(new ClassVisitor(Opcodes.ASM9) {
             @Override
             public MethodVisitor visitMethod(final int access, final String name, final String desc, final String signature, final String[] exceptions) {
                 if (name.equals("<init>")) {
@@ -147,7 +147,7 @@ public class AsmModifiersTest extends TestCase {
 
     public void testIsSynchronized() throws Exception {
         final ClassReader classReader = new ClassReader(IsSynchronized.class.getName());
-        classReader.accept(new ClassVisitor(Opcodes.ASM5) {
+        classReader.accept(new ClassVisitor(Opcodes.ASM9) {
             @Override
             public MethodVisitor visitMethod(final int access, final String name, final String desc, final String signature, final String[] exceptions) {
                 if (name.equals("<init>")) {
@@ -170,7 +170,7 @@ public class AsmModifiersTest extends TestCase {
 
     public void testIsVolatile() throws Exception {
         final ClassReader classReader = new ClassReader(IsVolatile.class.getName());
-        classReader.accept(new ClassVisitor(Opcodes.ASM5) {
+        classReader.accept(new ClassVisitor(Opcodes.ASM9) {
             @Override
             public FieldVisitor visitField(final int access, final String s, final String s1, final String s2, final Object o) {
 
@@ -190,7 +190,7 @@ public class AsmModifiersTest extends TestCase {
 
     public void testIsTransient() throws Exception {
         final ClassReader classReader = new ClassReader(IsTransient.class.getName());
-        classReader.accept(new ClassVisitor(Opcodes.ASM5) {
+        classReader.accept(new ClassVisitor(Opcodes.ASM9) {
             @Override
             public FieldVisitor visitField(final int access, final String s, final String s1, final String s2, final Object o) {
 
@@ -210,7 +210,7 @@ public class AsmModifiersTest extends TestCase {
 
     public void testIsNative() throws Exception {
         final ClassReader classReader = new ClassReader(IsNative.class.getName());
-        classReader.accept(new ClassVisitor(Opcodes.ASM5) {
+        classReader.accept(new ClassVisitor(Opcodes.ASM9) {
             @Override
             public MethodVisitor visitMethod(final int access, final String name, final String desc, final String signature, final String[] exceptions) {
                 if (name.equals("<init>")) {
@@ -233,7 +233,7 @@ public class AsmModifiersTest extends TestCase {
 
     public void testIsAbstract() throws Exception {
         final ClassReader classReader = new ClassReader(IsAbstract.class.getName());
-        classReader.accept(new ClassVisitor(Opcodes.ASM5) {
+        classReader.accept(new ClassVisitor(Opcodes.ASM9) {
             @Override
             public MethodVisitor visitMethod(final int access, final String name, final String desc, final String signature, final String[] exceptions) {
                 if (name.equals("<init>")) {

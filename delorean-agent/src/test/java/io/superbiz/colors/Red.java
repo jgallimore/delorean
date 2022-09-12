@@ -16,8 +16,6 @@
  */
 package io.superbiz.colors;
 
-import com.tomitribe.delorean.api.Delorean;
-
 /**
  * @version $Revision$ $Date$
  */
@@ -26,9 +24,9 @@ public class Red extends Color {
     public void red() {
         System.out.print("");
 
-        System.out.printf("Current date is %tF %<tT %s%n", Delorean.currentTimeMillis(), "Red");
+        System.out.printf("Current date is %tF %<tT %s%n", System.currentTimeMillis(), "Red");
         int i = Integer.parseInt("1");
-        long l = Delorean.currentTimeMillis();
+        long l = System.currentTimeMillis();
         if (Boolean.parseBoolean("" + l)) {
             System.out.print("");
         }

@@ -14,10 +14,7 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package com.tomitribe.delorean.agent;
-
-import com.tomitribe.delorean.util.IO;
-import com.tomitribe.delorean.util.Join;
+package com.tomitribe.delorean.util;
 
 import java.io.BufferedInputStream;
 import java.io.BufferedOutputStream;
@@ -34,8 +31,6 @@ import java.util.jar.JarEntry;
 import java.util.jar.JarFile;
 import java.util.zip.ZipEntry;
 import java.util.zip.ZipOutputStream;
-
-import static junit.framework.Assert.assertTrue;
 
 /**
  * @version $Revision$ $Date$
@@ -80,6 +75,10 @@ public class Archive {
             throw new IllegalStateException(e);
         }
 
+        return this;
+    }
+    public Archive add(final String name, byte[] content) {
+        entries.put(name, content);
         return this;
     }
 
@@ -145,7 +144,11 @@ public class Archive {
 
             final File d = file.getParentFile();
 
-            if (!d.exists()) assertTrue(d.getAbsolutePath(), d.mkdirs());
+            if (!d.exists()) {
+                if (!d.mkdirs()) {
+                    throw new RuntimeException("Unable to create " + d.getAbsolutePath());
+                }
+            }
 
             final BufferedOutputStream out = new BufferedOutputStream(new FileOutputStream(file));
 
