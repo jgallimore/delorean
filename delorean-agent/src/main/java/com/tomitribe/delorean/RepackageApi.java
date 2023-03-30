@@ -26,7 +26,7 @@ import static com.tomitribe.delorean.Packages.replaceObj;
 public class RepackageApi extends ClassVisitor implements Opcodes {
 
     public RepackageApi(final ClassVisitor classVisitor) {
-        super(Opcodes.ASM5, classVisitor);
+        super(Opcodes.ASM9, classVisitor);
     }
 
     public static byte[] enhance(byte[] bytes, final String className) {
@@ -62,7 +62,7 @@ public class RepackageApi extends ClassVisitor implements Opcodes {
     @Override
     public MethodVisitor visitMethod(final int access, final String name, final String desc, final String signature, final String[] exceptions) {
         final MethodVisitor visitor = super.visitMethod(access, replace(name), replace(desc), replace(signature), replace(exceptions));
-        return new MethodVisitor(Opcodes.ASM5, visitor) {
+        return new MethodVisitor(Opcodes.ASM9, visitor) {
             @Override
             public void visitMethodInsn(int i, String s, String s1, String s2, boolean b) {
                 super.visitMethodInsn(i, replace(s), replace(s1), replace(s2), b);
@@ -156,7 +156,7 @@ public class RepackageApi extends ClassVisitor implements Opcodes {
 
         final FieldVisitor visitor = super.visitField(i, replace(s), replace(s1), replace(s2), replaceObj(o));
 
-        return new FieldVisitor(Opcodes.ASM5, visitor) {
+        return new FieldVisitor(Opcodes.ASM9, visitor) {
             @Override
             public AnnotationVisitor visitAnnotation(String s, boolean b) {
                 return super.visitAnnotation(replace(s), b);
@@ -192,7 +192,7 @@ public class RepackageApi extends ClassVisitor implements Opcodes {
 
     private static class RepackageAnnotation extends AnnotationVisitor {
         public RepackageAnnotation(AnnotationVisitor visitor) {
-            super(Opcodes.ASM5, visitor);
+            super(Opcodes.ASM9, visitor);
         }
 
         @Override

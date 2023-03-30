@@ -16,6 +16,7 @@
  */
 package com.tomitribe.delorean;
 
+import java.io.IOException;
 import java.lang.instrument.ClassFileTransformer;
 import java.lang.instrument.IllegalClassFormatException;
 import java.lang.instrument.Instrumentation;
@@ -35,10 +36,6 @@ public class Agent {
 
     private static Instrumentation instrumentation;
 
-    static {
-        FluxCapacitor.install();
-    }
-
     private Agent() {
         // no-op
     }
@@ -48,8 +45,13 @@ public class Agent {
             return;
         }
 
-        initialize(agentArgs, instrumentation);
+        try {
+            FluxCapacitor.install(instrumentation);
+        } catch (IOException e) {
+            throw new RuntimeException(e);
+        }
 
+        initialize(agentArgs, instrumentation);
         Agent.instrumentation = instrumentation;
     }
 
@@ -65,10 +67,8 @@ public class Agent {
 
     private static void initialize(final String agentArgs, final Instrumentation instrumentation) {
         try {
-
             Log.debug.set(Boolean.getBoolean("delorean.debug"));
             instrumentation.addTransformer(new Transformer(), true);
-            Log.log("Agent installed successfully.");
 
             retransform(instrumentation,
                     Date.class,
@@ -81,11 +81,12 @@ public class Agent {
                     ResourceBundle.class
             );
 
+            Log.log("Agent installed successfully.");
             boolean modifiableClass = instrumentation.isModifiableClass(System.class);
             System.out.println(modifiableClass);
         } catch (final Throwable e) {
-            Log.err("Agent installation failed %s", e.getMessage());
             e.printStackTrace();
+            Log.err("Agent installation failed %s", e.getMessage());
         }
     }
 

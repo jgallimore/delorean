@@ -28,6 +28,7 @@ import java.util.List;
 import java.util.concurrent.ExecutionException;
 import java.util.concurrent.Future;
 import java.util.concurrent.FutureTask;
+import java.util.stream.Collectors;
 
 /**
  * @version $Revision$ $Date$
@@ -37,6 +38,9 @@ public class Java {
     public static Result java(final String... args) throws IOException, ExecutionException, InterruptedException {
         final ProcessBuilder java = javaProcess();
         java.command().addAll(Arrays.asList(args));
+
+        System.out.println("Running: " + java.command().stream().collect(Collectors.joining(" ")));
+
         return new Result(java.start());
     }
 

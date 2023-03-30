@@ -17,6 +17,7 @@
 package com.tomitribe.delorean.agent;
 
 import com.tomitribe.delorean.Agent;
+import com.tomitribe.delorean.util.Archive;
 import io.superbiz.colors.Blue;
 import io.superbiz.colors.Color;
 import io.superbiz.colors.Green;
@@ -24,6 +25,7 @@ import io.superbiz.colors.Main;
 import io.superbiz.colors.Red;
 import org.junit.Assert;
 import org.junit.Test;
+import org.objectweb.asm.Opcodes;
 import org.objectweb.asm.util.ASMifier;
 
 import java.io.File;
@@ -40,6 +42,7 @@ public class AgentTest extends Assert {
             .manifest("Can-Retransform-Classes", true)
             .addDir(JarLocation.jarLocation(Agent.class))
             .addJar(JarLocation.jarLocation(ASMifier.class))
+            .addJar(JarLocation.jarLocation(Opcodes.class))
             .asJar();
 
     final File testJar = Archive.archive()
@@ -51,13 +54,12 @@ public class AgentTest extends Assert {
 
     @Test
     public void test() throws Exception {
-
         final Java.Result result = Java.java(
-                "-Ddelorean.debug=true",
+//                "-agentlib:jdwp=transport=dt_socket,server=y,suspend=y,address=5005",
+                "-Ddelorean.debug=true ",
                 "-Ddelorean.offset=30 days ago",
                 "-javaagent:" + agentJar.getAbsolutePath(),
-                "-classpath",
-                testJar.getAbsolutePath(),
+                "-classpath", testJar.getAbsolutePath(),// + ":" + agentJar.getAbsolutePath(),
                 Main.class.getName()
         );
 

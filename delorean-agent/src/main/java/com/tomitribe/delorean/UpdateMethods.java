@@ -34,9 +34,10 @@ import org.objectweb.asm.Opcodes;
 public class UpdateMethods extends ClassVisitor implements Opcodes {
 
     private int replaced;
+    private String className;
 
     public UpdateMethods(final ClassVisitor classVisitor) {
-        super(Opcodes.ASM5, classVisitor);
+        super(Opcodes.ASM9, classVisitor);
     }
 
     public static byte[] enhance(byte[] bytes, final String className) {
@@ -65,9 +66,14 @@ public class UpdateMethods extends ClassVisitor implements Opcodes {
     @Override
     public MethodVisitor visitMethod(final int access, final String name, final String desc, final String signature, final String[] exceptions) {
         final MethodVisitor visitor = super.visitMethod(access, name, desc, signature, exceptions);
-        return new MethodVisitor(Opcodes.ASM5, visitor) {
+        return new MethodVisitor(Opcodes.ASM9, visitor) {
             @Override
             public void visitMethodInsn(int i, String s, String s1, String s2, boolean b) {
+
+                if (Packages.genClass.equals(className)) {
+                    super.visitMethodInsn(i, s, s1, s2, b);
+                    return;
+                }
 
                 // Replace System.currentTimeMillis() with FluxCapacitor.currentTimeMillis()
                 if ("java/lang/System".equals(s) && "currentTimeMillis".equals(s1) && "()J".equals(s2)) {
@@ -78,6 +84,8 @@ public class UpdateMethods extends ClassVisitor implements Opcodes {
                     // Replace the FluxCapacitor from the agent classpath with one in the bootstrap classpath
                 } else if (Packages.apiClass.equals(s)) {
 
+                    // commented out and replaced with the no-op above until we understand this mess
+                    // super.visitMethodInsn(i, s, s1, s2, b);
                     super.visitMethodInsn(i, Packages.genClass, s1, s2, b);
 
                     // Let the method through unmodified
@@ -86,6 +94,12 @@ public class UpdateMethods extends ClassVisitor implements Opcodes {
                 }
             }
         };
+    }
+
+    @Override
+    public void visit(int version, int access, String name, String signature, String superName, String[] interfaces) {
+        this.className = name;
+        super.visit(version, access, name, signature, superName, interfaces);
     }
 
     public int getReplaced() {

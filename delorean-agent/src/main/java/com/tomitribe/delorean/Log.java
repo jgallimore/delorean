@@ -54,5 +54,6 @@ public class Log {
 
     private static String asDate(final long timeMillis) {
         return String.format("%tF %<tT%n", timeMillis);
+//        return "";
     }
 }
