@@ -60,7 +60,7 @@
               <relocations>
                 <relocation>
                   <pattern>org.objectweb.asm</pattern>
-                  <shadedPattern>com.tomitribe.delorean.asm</shadedPattern>
+                  <shadedPattern>org.tomitribe.delorean.asm</shadedPattern>
                 </relocation>
               </relocations>
             </configuration>
