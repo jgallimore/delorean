@@ -15,23 +15,22 @@
  * limitations under the License.
  *
  */
-package io.superbiz.colors;
+package org.tomitribe.delorean.api;
 
-/**
- * @version $Revision$ $Date$
- */
-public class Blue extends Color {
+import java.lang.annotation.Retention;
+import java.lang.annotation.RetentionPolicy;
+import java.lang.annotation.Target;
 
-    public void blue() {
-        System.out.print("");
+import static java.lang.annotation.ElementType.CONSTRUCTOR;
+import static java.lang.annotation.ElementType.FIELD;
+import static java.lang.annotation.ElementType.METHOD;
+import static java.lang.annotation.ElementType.PARAMETER;
+import static java.lang.annotation.ElementType.TYPE;
 
-        System.out.printf("Current date is %tF %<tT %s%n", System.currentTimeMillis(), "Blue");
+@Retention(RetentionPolicy.RUNTIME)
+@Target({METHOD, CONSTRUCTOR, FIELD, PARAMETER, TYPE})
+public @interface Green {
 
-        System.currentTimeMillis();
-        int i = Integer.parseInt("3");
-        long l = System.currentTimeMillis();
-        if (Boolean.parseBoolean("" + l)) {
-            System.out.print("");
-        }
-    }
+    Purple value() default Purple.CIRCLE;
+
 }

@@ -15,23 +15,10 @@
  * limitations under the License.
  *
  */
-package io.superbiz.colors;
+package org.tomitribe.delorean.gen;
 
-/**
- * @version $Revision$ $Date$
- */
-public class Blue extends Color {
-
-    public void blue() {
-        System.out.print("");
-
-        System.out.printf("Current date is %tF %<tT %s%n", System.currentTimeMillis(), "Blue");
-
-        System.currentTimeMillis();
-        int i = Integer.parseInt("3");
-        long l = System.currentTimeMillis();
-        if (Boolean.parseBoolean("" + l)) {
-            System.out.print("");
-        }
-    }
+public enum Purple {
+    SQUARE,
+    TRIANGLE,
+    CIRCLE;
 }

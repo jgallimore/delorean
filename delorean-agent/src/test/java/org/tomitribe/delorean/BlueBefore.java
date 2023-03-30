@@ -15,23 +15,27 @@
  * limitations under the License.
  *
  */
-package io.superbiz.colors;
 
-/**
- * @version $Revision$ $Date$
- */
-public class Blue extends Color {
+package org.tomitribe.delorean;
 
-    public void blue() {
+public class BlueBefore {
+
+    public void foo() throws IllegalStateException {
         System.out.print("");
 
-        System.out.printf("Current date is %tF %<tT %s%n", System.currentTimeMillis(), "Blue");
-
         System.currentTimeMillis();
-        int i = Integer.parseInt("3");
-        long l = System.currentTimeMillis();
-        if (Boolean.parseBoolean("" + l)) {
+
+        int i = Integer.parseInt("");
+
+        long l1 = System.nanoTime();
+        long l2 = System.currentTimeMillis();
+
+        if (Boolean.parseBoolean("" + l2)) {
             System.out.print("");
         }
+    }
+
+    public long bar() throws IllegalStateException {
+        return System.currentTimeMillis();
     }
 }
