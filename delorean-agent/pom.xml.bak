@@ -36,8 +36,8 @@
         <configuration>
           <archive>
             <manifestEntries>
-              <Premain-Class>com.tomitribe.delorean.Agent</Premain-Class>
-              <Agent-Class>com.tomitribe.delorean.Agent</Agent-Class>
+              <Premain-Class>Agent</Premain-Class>
+              <Agent-Class>Agent</Agent-Class>
               <Can-Redefine-Classes>true</Can-Redefine-Classes>
               <Can-Retransform-Classes>true</Can-Retransform-Classes>
             </manifestEntries>

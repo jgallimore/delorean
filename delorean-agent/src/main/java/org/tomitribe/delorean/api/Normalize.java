@@ -15,23 +15,26 @@
  * limitations under the License.
  *
  */
-package io.superbiz.colors;
+package org.tomitribe.delorean.api;
 
-/**
- * @version $Revision$ $Date$
- */
-public class Blue extends Color {
+import java.util.concurrent.TimeUnit;
 
-    public void blue() {
-        System.out.print("");
+public class Normalize {
+    long a;
+    long b;
+    TimeUnit base;
 
-        System.out.printf("Current date is %tF %<tT %s%n", System.currentTimeMillis(), "Blue");
+    Normalize(final Duration a, final Duration b) {
+        this.base = lowest(a, b);
+        this.a = a.unit == null ? a.time : base.convert(a.time, a.unit);
+        this.b = b.unit == null ? b.time : base.convert(b.time, b.unit);
+    }
 
-        System.currentTimeMillis();
-        int i = Integer.parseInt("3");
-        long l = System.currentTimeMillis();
-        if (Boolean.parseBoolean("" + l)) {
-            System.out.print("");
-        }
+    private static TimeUnit lowest(final Duration a, final Duration b) {
+        if (a.unit == null) return b.unit;
+        if (b.unit == null) return a.unit;
+        if (a.time == 0) return b.unit;
+        if (b.time == 0) return a.unit;
+        return TimeUnit.values()[Math.min(a.unit.ordinal(), b.unit.ordinal())];
     }
 }

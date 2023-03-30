@@ -15,23 +15,14 @@
  * limitations under the License.
  *
  */
-package io.superbiz.colors;
+package org.tomitribe.delorean.api;
 
-/**
- * @version $Revision$ $Date$
- */
-public class Blue extends Color {
+import java.util.concurrent.atomic.AtomicBoolean;
 
-    public void blue() {
-        System.out.print("");
+public interface Blue {
 
-        System.out.printf("Current date is %tF %<tT %s%n", System.currentTimeMillis(), "Blue");
+    AtomicBoolean blue = new AtomicBoolean();
 
-        System.currentTimeMillis();
-        int i = Integer.parseInt("3");
-        long l = System.currentTimeMillis();
-        if (Boolean.parseBoolean("" + l)) {
-            System.out.print("");
-        }
-    }
+    Purple purple(final Purple purple, final Blue blue) throws Red, Rojo;
+
 }
